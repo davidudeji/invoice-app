@@ -1,0 +1,91 @@
+"use client";
+
+import { useInvoiceStore } from "@/lib/store";
+import { Eye, MoreHorizontal, ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+
+export function RecentInvoicesTable() {
+    const { invoices, clients } = useInvoiceStore();
+
+    // Sort by date (desc) and take top 5
+    const recentInvoices = [...invoices]
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .slice(0, 5);
+
+    if (recentInvoices.length === 0) {
+        return (
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-12 text-center">
+                <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <ArrowUpRight size={24} className="text-slate-300" />
+                </div>
+                <h3 className="text-slate-900 font-medium mb-1">No invoices yet</h3>
+                <p className="text-slate-500 text-sm mb-4">Create your first invoice to get started.</p>
+                <Link href="/invoices/new" className="text-indigo-600 text-sm font-semibold hover:underline">
+                    Create Invoice &rarr;
+                </Link>
+            </div>
+        );
+    }
+
+    return (
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                <h3 className="font-bold text-slate-800">Recent Invoices</h3>
+                <Link href="/invoices" className="text-xs font-medium text-indigo-600 hover:text-indigo-700 hover:underline">
+                    View All
+                </Link>
+            </div>
+
+            <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                    <thead className="bg-slate-50 text-slate-500 font-medium">
+                        <tr>
+                            <th className="px-6 py-3">Invoice #</th>
+                            <th className="px-6 py-3">Client</th>
+                            <th className="px-6 py-3">Due Date</th>
+                            <th className="px-6 py-3 text-right">Amount</th>
+                            <th className="px-6 py-3 text-center">Status</th>
+                            <th className="px-6 py-3 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                        {recentInvoices.map((inv) => (
+                            <tr key={inv.id} className="hover:bg-slate-50/50 transition-colors group">
+                                <td className="px-6 py-4 font-medium text-slate-900">{inv.number}</td>
+                                <td className="px-6 py-4 text-slate-600">
+                                    {clients.find(c => c.id === inv.clientId)?.name}
+                                </td>
+                                <td className="px-6 py-4 text-slate-500 whitespace-nowrap">
+                                    {new Date(inv.dueDate).toLocaleDateString()}
+                                </td>
+                                <td className="px-6 py-4 text-right font-bold text-slate-700">
+                                    ${inv.total.toFixed(2)}
+                                </td>
+                                <td className="px-6 py-4 text-center">
+                                    <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium capitalize
+                                        ${inv.status === 'paid' ? 'bg-emerald-100 text-emerald-700' :
+                                            inv.status === 'overdue' ? 'bg-rose-100 text-rose-700' :
+                                                inv.status === 'pending' ? 'bg-amber-100 text-amber-700' :
+                                                    'bg-slate-100 text-slate-600'}
+                                    `}>
+                                        {inv.status}
+                                    </span>
+                                </td>
+                                <td className="px-6 py-4 text-right">
+                                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 transition-colors">
+                                            <Eye size={16} />
+                                        </button>
+                                        <button className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 transition-colors">
+                                            <MoreHorizontal size={16} />
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+}
