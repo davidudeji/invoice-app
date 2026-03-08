@@ -1,14 +1,15 @@
 
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useState } from 'react';
+import { useFormState } from 'react-dom';
 import { createTaxRate, deleteTaxRate, State } from '@/app/actions/settings';
 import { SubmitButton } from '@/components/SubmitButton';
 import { TrashIcon } from 'lucide-react';
 
 export function TaxRatesList({ taxRates }: { taxRates: any[] }) {
     const initialState: State = { message: null, errors: {} };
-    const [state, formAction] = useActionState(createTaxRate, initialState);
+    const [state, formAction] = useFormState(createTaxRate, initialState);
 
     // Optimistic UI could be added here, but for MVP we rely on server revalidation
 

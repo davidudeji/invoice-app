@@ -1,14 +1,15 @@
 
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useState } from 'react';
+import { useFormState } from 'react-dom';
 import { createPaymentMethod, deletePaymentMethod, State } from '@/app/actions/settings';
 import { SubmitButton } from '@/components/SubmitButton';
 import { TrashIcon } from 'lucide-react';
 
 export function PaymentMethodsList({ paymentMethods }: { paymentMethods: any[] }) {
     const initialState: State = { message: null, errors: {} };
-    const [state, formAction] = useActionState(createPaymentMethod, initialState);
+    const [state, formAction] = useFormState(createPaymentMethod, initialState);
 
     const handleDelete = async (id: string) => {
         if (confirm('Are you sure?')) {

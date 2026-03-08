@@ -1,4 +1,4 @@
 import { auth } from "@/auth" // Request authentication
 
-export const GET = auth
-export const POST = auth
+export const GET: any = auth
+export const POST: any = auth
