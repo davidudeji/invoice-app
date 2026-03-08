@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
+  --background: #EFF0F2;
+  --foreground: #183362;
 }
 
 /* Minimal Scrollbar for Webkit */
