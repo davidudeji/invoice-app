@@ -68,10 +68,10 @@ export default function LandingPage() {
     <div ref={container} className="min-h-screen bg-brand-bg font-sans text-brand-text overflow-x-hidden selection:bg-brand-accent/20 selection:text-brand-primary">
 
       {/* Sticky Navigation */}
-      <nav className="fixed w-full z-50 bg-brand-bg/80 border-b border-brand-border backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src="/invoice-logo.png" alt="InvoicePay Logo" className="h-8 w-auto object-contain " sizes="5" />
+      <nav className="fixed w-full z-50 bg-brand-bg/90 border-b border-brand-border backdrop-blur-md transition-all">
+        <div className="max-w-7xl mx-auto px-6 h-20 md:h-24 flex items-center justify-between">
+          <div className="flex items-center gap-2 pt-1 h-full min-w-[140px]">
+            <img src="/invoice-logo.png" alt="InvoicePay Logo" className="h-10 md:h-12 w-auto object-contain shrink-0" />
           </div>
           <div className="hidden md:flex gap-8 text-sm font-medium text-brand-text">
             <a href="#features" className="hover:text-brand-primary transition-colors">Features</a>

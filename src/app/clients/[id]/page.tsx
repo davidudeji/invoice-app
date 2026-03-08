@@ -3,8 +3,9 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
-import { Mail, Phone, MapPin, Globe, Edit, FileText } from 'lucide-react';
+import { Mail, Phone, MapPin, Globe, Edit, FileText, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
+import { deleteClient } from '@/app/actions/clients';
 
 export default async function ClientDetailPage({ params }: { params: { id: string } }) {
     const session = await auth();
@@ -61,13 +62,25 @@ export default async function ClientDetailPage({ params }: { params: { id: strin
                         <FileText size={16} />
                         New Invoice
                     </Link>
-                    <button
-                        // href={`/clients/${client.id}/edit`}
-                        className="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                    <Link
+                        href={`/clients/${client.id}/edit`}
+                        className="inline-flex items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                     >
                         <Edit size={16} />
                         Edit Profile
-                    </button>
+                    </Link>
+                    <form action={async () => {
+                        "use server";
+                        await deleteClient(client.id);
+                    }}>
+                        <button
+                            type="submit"
+                            className="inline-flex items-center gap-2 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 transition-colors"
+                        >
+                            <Trash2 size={16} />
+                            Delete
+                        </button>
+                    </form>
                 </div>
             </div>
 

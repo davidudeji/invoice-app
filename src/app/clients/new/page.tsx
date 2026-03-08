@@ -1,14 +1,14 @@
 
 'use client';
 
-import { useActionState } from 'react';
+import { useFormState } from 'react-dom';
 import { createClient, State } from '@/app/actions/clients';
 import { SubmitButton } from '@/components/SubmitButton';
 import Link from 'next/link';
 
 export default function NewClientPage() {
     const initialState: State = { message: null, errors: {} };
-    const [state, formAction] = useActionState(createClient, initialState);
+    const [state, formAction] = useFormState(createClient, initialState);
 
     return (
         <div className="max-w-2xl mx-auto p-6">

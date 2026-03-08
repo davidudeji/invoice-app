@@ -2,7 +2,7 @@
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
-import { TrendingUp, TrendingDown, DollarSign, Calendar, PieChart, Download } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, Calendar, PieChart, Download, FileText } from 'lucide-react';
 import { format, subMonths, startOfMonth, endOfMonth, eachMonthOfInterval } from 'date-fns';
 
 export default async function ReportsPage() {
@@ -23,16 +23,9 @@ export default async function ReportsPage() {
         .filter(inv => inv.status === 'PAID')
         .reduce((sum, inv) => sum + inv.total, 0);
 
-    const pendingAmount = invoices
-        .filter(inv => inv.status === 'PENDING' || inv.status === 'OVERDUE')
-        .reduce((sum, inv) => sum + inv.total, 0);
-
-    const overdueAmount = invoices
-        .filter(inv => inv.status === 'OVERDUE')
-        .reduce((sum, inv) => sum + inv.total, 0);
-
     const totalInvoices = invoices.length;
     const paidInvoices = invoices.filter(inv => inv.status === 'PAID').length;
+    const pendingInvoices = invoices.filter(inv => inv.status === 'PENDING').length;
 
     // --- Chart Data Preparation (Last 6 Months) ---
     const today = new Date();
@@ -65,7 +58,7 @@ export default async function ReportsPage() {
     // --- Top Clients ---
     const clientRevenue: Record<string, number> = {};
     invoices.filter(inv => inv.status === 'PAID').forEach(inv => {
-        const clientName = inv.client.name;
+        const clientName = inv.client?.name || 'Unknown Client';
         clientRevenue[clientName] = (clientRevenue[clientName] || 0) + inv.total;
     });
 
@@ -104,22 +97,12 @@ export default async function ReportsPage() {
 
                 <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <div className="flex justify-between items-start mb-4">
-                        <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
-                            <Calendar size={20} />
+                        <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+                            <FileText size={20} />
                         </div>
                     </div>
-                    <p className="text-slate-500 text-sm font-medium">Pending Amount</p>
-                    <h3 className="text-2xl font-bold text-slate-900">${pendingAmount.toLocaleString()}</h3>
-                </div>
-
-                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-2 bg-red-50 text-red-600 rounded-lg">
-                            <TrendingDown size={20} />
-                        </div>
-                    </div>
-                    <p className="text-slate-500 text-sm font-medium">Overdue Amount</p>
-                    <h3 className="text-2xl font-bold text-slate-900">${overdueAmount.toLocaleString()}</h3>
+                    <p className="text-slate-500 text-sm font-medium">Total Invoices</p>
+                    <h3 className="text-2xl font-bold text-slate-900">{totalInvoices}</h3>
                 </div>
 
                 <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
@@ -129,7 +112,17 @@ export default async function ReportsPage() {
                         </div>
                     </div>
                     <p className="text-slate-500 text-sm font-medium">Paid Invoices</p>
-                    <h3 className="text-2xl font-bold text-slate-900">{paidInvoices} <span className="text-sm font-normal text-slate-400">/ {totalInvoices}</span></h3>
+                    <h3 className="text-2xl font-bold text-slate-900">{paidInvoices}</h3>
+                </div>
+
+                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
+                            <Calendar size={20} />
+                        </div>
+                    </div>
+                    <p className="text-slate-500 text-sm font-medium">Pending Invoices</p>
+                    <h3 className="text-2xl font-bold text-slate-900">{pendingInvoices}</h3>
                 </div>
             </div>
 

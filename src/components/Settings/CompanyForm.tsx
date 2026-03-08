@@ -1,13 +1,13 @@
 
 'use client';
 
-import { useActionState } from 'react';
+import { useFormState } from 'react-dom';
 import { updateCompanySettings, State } from '@/app/actions/settings';
 import { SubmitButton } from '@/components/SubmitButton';
 
 export function CompanyForm({ settings }: { settings: any }) {
     const initialState: State = { message: null, errors: {} };
-    const [state, formAction] = useActionState(updateCompanySettings, initialState);
+    const [state, formAction] = useFormState(updateCompanySettings, initialState);
 
     return (
         <div className="bg-white shadow sm:rounded-lg">
